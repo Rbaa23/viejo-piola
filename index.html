@@ -2,79 +2,115 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Viejo Piola</title>
 <style>
-* { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0f0f0f; color: #e0e0e0; min-height: 100vh; }
-.container { max-width: 1000px; margin: 0 auto; padding: 16px; }
-header { background: linear-gradient(135deg, #1a1a2e, #16213e); padding: 20px 24px; border-radius: 12px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
-header h1 { font-size: 24px; color: #e94560; }
-header h1 span { color: #e0e0e0; }
-.header-total { font-size: 14px; color: #aaa; }
-.header-total strong { color: #4ade80; font-size: 18px; }
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0f0f0f; color: #e0e0e0; min-height: 100vh; overflow-x: hidden; }
+.container { max-width: 1000px; margin: 0 auto; padding: 12px; }
 
-nav { display: flex; gap: 4px; background: #1a1a2e; border-radius: 10px; padding: 4px; margin-bottom: 20px; overflow-x: auto; }
-nav button { flex: 1; padding: 10px 16px; border: none; background: transparent; color: #888; font-size: 14px; font-weight: 600; border-radius: 8px; cursor: pointer; transition: all .2s; white-space: nowrap; }
-nav button:hover { color: #ccc; }
+header { background: linear-gradient(135deg, #1a1a2e, #16213e); padding: 16px 18px; border-radius: 10px; margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+header h1 { font-size: 22px; color: #e94560; }
+header h1 span { color: #e0e0e0; }
+.header-total { font-size: 13px; color: #aaa; white-space: nowrap; }
+.header-total strong { color: #4ade80; font-size: 16px; }
+
+nav { display: flex; gap: 3px; background: #1a1a2e; border-radius: 8px; padding: 3px; margin-bottom: 14px; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+nav button { flex: 1; padding: 10px 8px; border: none; background: transparent; color: #888; font-size: 13px; font-weight: 600; border-radius: 6px; cursor: pointer; transition: all .2s; white-space: nowrap; min-width: 0; }
+nav button:active { transform: scale(.97); }
 nav button.active { background: #e94560; color: #fff; }
 
 .section { display: none; }
 .section.active { display: block; }
 
-.card { background: #1a1a2e; border-radius: 10px; padding: 20px; margin-bottom: 16px; }
-.card h2 { font-size: 18px; margin-bottom: 16px; color: #e94560; }
+.card { background: #1a1a2e; border-radius: 10px; padding: 16px; margin-bottom: 14px; }
+.card h2 { font-size: 16px; margin-bottom: 12px; color: #e94560; }
 
-.form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 16px; }
-.form-group { display: flex; flex-direction: column; gap: 4px; }
-.form-group label { font-size: 12px; color: #888; font-weight: 600; text-transform: uppercase; letter-spacing: .5px; }
-.form-group input, .form-group select { padding: 10px 12px; border: 1px solid #2a2a3e; border-radius: 6px; background: #0f0f0f; color: #e0e0e0; font-size: 14px; outline: none; transition: border .2s; }
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+.form-group { display: flex; flex-direction: column; gap: 3px; }
+.form-group label { font-size: 10px; color: #888; font-weight: 600; text-transform: uppercase; letter-spacing: .3px; }
+.form-group input, .form-group select { padding: 10px 10px; border: 1px solid #2a2a3e; border-radius: 6px; background: #0f0f0f; color: #e0e0e0; font-size: 14px; outline: none; transition: border .2s; -webkit-appearance: none; }
 .form-group input:focus, .form-group select:focus { border-color: #e94560; }
 .form-group input:disabled { opacity: .5; cursor: not-allowed; }
 
-.btn { padding: 10px 20px; border: none; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all .2s; }
+.btn { padding: 10px 16px; border: none; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all .2s; -webkit-appearance: none; }
+.btn:active { transform: scale(.97); }
 .btn-primary { background: #e94560; color: #fff; }
-.btn-primary:hover { background: #d63852; }
 .btn-danger { background: #dc2626; color: #fff; }
-.btn-danger:hover { background: #b91c1c; }
 .btn-success { background: #16a34a; color: #fff; }
-.btn-success:hover { background: #15803d; }
-.btn-sm { padding: 6px 12px; font-size: 12px; }
+.btn-sm { padding: 6px 10px; font-size: 11px; }
 .btn-outline { background: transparent; border: 1px solid #2a2a3e; color: #e0e0e0; }
-.btn-outline:hover { border-color: #e94560; color: #e94560; }
-.actions { display: flex; gap: 8px; align-items: end; flex-wrap: wrap; }
+.actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
 
-table { width: 100%; border-collapse: collapse; font-size: 14px; }
-thead th { text-align: left; padding: 10px 12px; background: #0f0f0f; color: #888; font-size: 12px; text-transform: uppercase; letter-spacing: .5px; border-bottom: 1px solid #2a2a3e; }
-tbody td { padding: 10px 12px; border-bottom: 1px solid #1f1f2e; }
-tbody tr:hover { background: #1f1f2e; }
+.scroll-x { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 0 -16px; padding: 0 16px; }
+table { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 560px; }
+thead th { text-align: left; padding: 8px 8px; background: #0f0f0f; color: #888; font-size: 10px; text-transform: uppercase; letter-spacing: .3px; border-bottom: 1px solid #2a2a3e; white-space: nowrap; }
+tbody td { padding: 8px 8px; border-bottom: 1px solid #1f1f2e; white-space: nowrap; }
+tbody tr:active { background: #1f1f2e; }
 .text-right { text-align: right; }
 .text-center { text-align: center; }
 .text-success { color: #4ade80; }
 .text-danger { color: #ef4444; }
 .text-muted { color: #666; }
 
-.badge { display: inline-block; padding: 2px 10px; border-radius: 999px; font-size: 11px; font-weight: 600; }
+.badge { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 10px; font-weight: 600; white-space: nowrap; }
 .badge-beer { background: #f59e0b20; color: #f59e0b; }
 .badge-pisco { background: #8b5cf620; color: #8b5cf6; }
 .badge-pending { background: #facc1520; color: #facc15; }
 .badge-paid { background: #4ade8020; color: #4ade80; }
 
-.summary-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 20px; }
-.summary-card { background: #1a1a2e; border-radius: 10px; padding: 16px; text-align: center; }
-.summary-card .label { font-size: 12px; color: #888; text-transform: uppercase; letter-spacing: .5px; }
-.summary-card .value { font-size: 28px; font-weight: 700; margin-top: 4px; }
+.summary-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px; }
+.summary-card { background: #1a1a2e; border-radius: 8px; padding: 12px; text-align: center; }
+.summary-card:active { transform: scale(.97); }
+.summary-card .label { font-size: 10px; color: #888; text-transform: uppercase; letter-spacing: .3px; }
+.summary-card .value { font-size: 20px; font-weight: 700; margin-top: 2px; }
 .summary-card .value.gold { color: #f59e0b; }
 .summary-card .value.purple { color: #8b5cf6; }
 .summary-card .value.green { color: #4ade80; }
 .summary-card .value.red { color: #ef4444; }
 
-.fixed-badge { display: inline-block; font-size: 11px; color: #f59e0b; margin-top: 2px; }
+.fixed-badge { display: block; font-size: 10px; color: #f59e0b; margin-top: 2px; }
 
-@media (max-width: 600px) {
-  header { flex-direction: column; text-align: center; }
-  .form-grid { grid-template-columns: 1fr 1fr; }
-  .summary-cards { grid-template-columns: 1fr 1fr; }
+.ganado-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+.ganado-box { background: #0f0f0f; border-radius: 8px; padding: 12px; text-align: center; }
+.ganado-box .label { font-size: 10px; color: #888; text-transform: uppercase; letter-spacing: .3px; }
+.ganado-box .value { font-size: 20px; font-weight: 700; margin-top: 2px; }
+.bar-wrap { background: #0f0f0f; border-radius: 8px; padding: 12px; }
+.bar-labels { display: flex; justify-content: space-between; font-size: 10px; color: #888; margin-bottom: 4px; }
+.bar-track { height: 16px; background: #2a2a3e; border-radius: 8px; overflow: hidden; }
+.bar-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #4ade80, #22d3ee); border-radius: 8px; transition: width .4s; }
+
+@media (max-width: 480px) {
+  .container { padding: 8px; }
+  header { padding: 12px 14px; }
+  header h1 { font-size: 18px; }
+  .header-total { font-size: 11px; }
+  .header-total strong { font-size: 14px; }
+  nav { gap: 2px; padding: 2px; border-radius: 6px; }
+  nav button { padding: 8px 4px; font-size: 11px; }
+  .card { padding: 12px; }
+  .card h2 { font-size: 14px; margin-bottom: 10px; }
+  .form-grid { grid-template-columns: 1fr; gap: 8px; }
+  .form-group label { font-size: 9px; }
+  .form-group input, .form-group select { padding: 10px 8px; font-size: 14px; }
+  .btn { padding: 10px 12px; font-size: 13px; width: 100%; text-align: center; }
+  .btn-sm { width: auto; padding: 6px 8px; font-size: 10px; }
+  .actions { flex-direction: column; }
+  .actions .btn { width: 100%; }
+  table { font-size: 10px; min-width: 480px; }
+  thead th { padding: 5px 4px; font-size: 9px; }
+  tbody td { padding: 5px 4px; }
+  .summary-cards { gap: 6px; }
+  .summary-card { padding: 10px; }
+  .summary-card .value { font-size: 18px; }
+  .summary-card .label { font-size: 9px; }
+  .badge { font-size: 9px; padding: 1px 6px; }
+  .ganado-grid { gap: 8px; }
+  .ganado-box { padding: 10px; }
+  .ganado-box .value { font-size: 18px; }
+  .ganado-box .label { font-size: 9px; }
+  .bar-labels { font-size: 9px; }
+  .bar-track { height: 14px; }
 }
 </style>
 </head>
@@ -82,7 +118,7 @@ tbody tr:hover { background: #1f1f2e; }
 <div class="container">
   <header>
     <h1>🍺 <span>Viejo</span> Piola</h1>
-    <div class="header-total">Balance total: <strong id="totalBalance">$0</strong></div>
+    <div class="header-total">Balance: <strong id="totalBalance">$0</strong></div>
   </header>
 
   <nav id="mainNav">
@@ -95,43 +131,35 @@ tbody tr:hover { background: #1f1f2e; }
   <!-- DASHBOARD -->
   <section id="section-dashboard" class="section active">
     <div class="summary-cards">
-      <div class="summary-card"><div class="label">Cervezas Vendidas</div><div class="value gold" id="sumBeerQty">0</div></div>
-      <div class="summary-card"><div class="label">Promos Pisco Vendidas</div><div class="value purple" id="sumPiscoQty">0</div></div>
+      <div class="summary-card"><div class="label">Cervezas Vend.</div><div class="value gold" id="sumBeerQty">0</div></div>
+      <div class="summary-card"><div class="label">Promos Pisco Vend.</div><div class="value purple" id="sumPiscoQty">0</div></div>
       <div class="summary-card"><div class="label">Ganancia</div><div class="value green" id="sumProfit">$0</div></div>
       <div class="summary-card"><div class="label">Por Cobrar</div><div class="value red" id="sumDebt">$0</div></div>
     </div>
     <div class="card">
       <h2>💰 Ganado vs Invertido</h2>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:12px">
-        <div style="background:#0f0f0f;border-radius:8px;padding:16px;text-align:center">
-          <div style="font-size:12px;color:#888;text-transform:uppercase;letter-spacing:.5px">Total Ganado (Ventas)</div>
-          <div style="font-size:24px;font-weight:700;color:#4ade80;margin-top:4px" id="dashEarned">$0</div>
+      <div class="ganado-grid">
+        <div class="ganado-box">
+          <div class="label">Total Ganado (Ventas)</div>
+          <div class="value" style="color:#4ade80" id="dashEarned">$0</div>
         </div>
-        <div style="background:#0f0f0f;border-radius:8px;padding:16px;text-align:center">
-          <div style="font-size:12px;color:#888;text-transform:uppercase;letter-spacing:.5px">Total Invertido</div>
-          <div style="font-size:24px;font-weight:700;color:#ef4444;margin-top:4px" id="dashInvested">$0</div>
+        <div class="ganado-box">
+          <div class="label">Total Invertido</div>
+          <div class="value" style="color:#ef4444" id="dashInvested">$0</div>
         </div>
       </div>
-      <div style="background:#0f0f0f;border-radius:8px;padding:16px">
-        <div style="display:flex;justify-content:space-between;font-size:12px;color:#888;margin-bottom:6px">
-          <span>Invertido</span>
-          <span id="dashInvestedPct">0%</span>
-        </div>
-        <div style="height:20px;background:#2a2a3e;border-radius:10px;overflow:hidden">
-          <div id="dashBar" style="height:100%;width:0%;background:linear-gradient(90deg,#4ade80,#22d3ee);border-radius:10px;transition:width .4s"></div>
-        </div>
-        <div style="display:flex;justify-content:space-between;font-size:12px;color:#888;margin-top:6px">
-          <span>Ganado</span>
-          <span id="dashEarnedPct">0%</span>
-        </div>
+      <div class="bar-wrap">
+        <div class="bar-labels"><span>Invertido</span><span id="dashInvestedPct">0%</span></div>
+        <div class="bar-track"><div class="bar-fill" id="dashBar"></div></div>
+        <div class="bar-labels" style="margin-top:4px"><span>Ganado</span><span id="dashEarnedPct">0%</span></div>
       </div>
     </div>
     <div class="card">
       <h2>📈 Resumen</h2>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
         <div>
-          <table>
-            <thead><tr><th>Producto</th><th class="text-right">Cant.</th><th class="text-right">Total Venta</th></tr></thead>
+          <table style="min-width:0">
+            <thead><tr><th>Producto</th><th class="text-right">Cant.</th><th class="text-right">Total</th></tr></thead>
             <tbody>
               <tr><td><span class="badge badge-beer">🍺 Cerveza</span></td><td class="text-right" id="dashBeerQty">0</td><td class="text-right" id="dashBeerTotal">$0</td></tr>
               <tr><td><span class="badge badge-pisco">🥃 Pisco</span></td><td class="text-right" id="dashPiscoQty">0</td><td class="text-right" id="dashPiscoTotal">$0</td></tr>
@@ -139,13 +167,13 @@ tbody tr:hover { background: #1f1f2e; }
           </table>
         </div>
         <div>
-          <table>
+          <table style="min-width:0">
             <thead><tr><th>Métrica</th><th class="text-right">Monto</th></tr></thead>
             <tbody>
-              <tr><td>Costo total (prod.)</td><td class="text-right" id="dashTotalCost">$0</td></tr>
-              <tr><td>Total Vendido</td><td class="text-right" id="dashTotalSales">$0</td></tr>
-              <tr><td>Gastos Operativos</td><td class="text-right" id="dashExpenses">$0</td></tr>
-              <tr><td>Deuda Pendiente</td><td class="text-right" id="dashTotalDebt">$0</td></tr>
+              <tr><td>Costo prod.</td><td class="text-right" id="dashTotalCost">$0</td></tr>
+              <tr><td>Vendido</td><td class="text-right" id="dashTotalSales">$0</td></tr>
+              <tr><td>Gastos</td><td class="text-right" id="dashExpenses">$0</td></tr>
+              <tr><td>Deuda Pend.</td><td class="text-right" id="dashTotalDebt">$0</td></tr>
             </tbody>
           </table>
         </div>
@@ -153,10 +181,12 @@ tbody tr:hover { background: #1f1f2e; }
     </div>
     <div class="card">
       <h2>🕐 Últimos Movimientos</h2>
-      <table>
-        <thead><tr><th>Fecha</th><th>Tipo</th><th>Detalle</th><th class="text-right">Monto</th></tr></thead>
-        <tbody id="recentMovements"><tr><td colspan="4" class="text-center text-muted">Sin movimientos aún</td></tr></tbody>
-      </table>
+      <div class="scroll-x">
+        <table style="min-width:0;width:100%">
+          <thead><tr><th>Fecha</th><th>Tipo</th><th>Detalle</th><th class="text-right">Monto</th></tr></thead>
+          <tbody id="recentMovements"><tr><td colspan="4" class="text-center text-muted">Sin movimientos aún</td></tr></tbody>
+        </table>
+      </div>
     </div>
   </section>
 
@@ -187,7 +217,7 @@ tbody tr:hover { background: #1f1f2e; }
         </div>
       </div>
       <div class="actions">
-        <button class="btn btn-success btn-sm" id="applyUnitCost" disabled onclick="applyBeerCost()">⬇ Usar este costo en venta</button>
+        <button class="btn btn-success btn-sm" id="applyUnitCost" disabled onclick="applyBeerCost()">⬇ Usar en venta</button>
         <button class="btn btn-sm btn-outline" onclick="calcBeerBoxes()">🔄 Calcular</button>
       </div>
     </div>
@@ -195,20 +225,20 @@ tbody tr:hover { background: #1f1f2e; }
       <h2>🥃 Costo de Pisco para Promo</h2>
       <div class="form-grid">
         <div class="form-group">
-          <label>Pisco que gastas x promo ($)</label>
+          <label>Pisco x promo ($)</label>
           <input type="number" id="piscoCostPer" step="1" min="0" placeholder="ej: 1800">
         </div>
         <div class="form-group">
-          <label>Bebida que gastas x promo ($)</label>
+          <label>Bebida x promo ($)</label>
           <input type="number" id="piscoMixerPer" step="1" min="0" placeholder="ej: 2000">
         </div>
         <div class="form-group">
-          <label>Costo total por promo</label>
+          <label>Costo total x promo</label>
           <input type="text" id="piscoTotalCost" disabled style="color:#4ade80;font-weight:600">
         </div>
       </div>
       <div class="actions">
-        <button class="btn btn-success btn-sm" id="applyPiscoCost" disabled onclick="applyPiscoCost()">⬇ Usar este costo en venta</button>
+        <button class="btn btn-success btn-sm" id="applyPiscoCost" disabled onclick="applyPiscoCost()">⬇ Usar en venta</button>
         <button class="btn btn-sm btn-outline" onclick="calcPisco()">🔄 Calcular</button>
       </div>
     </div>
@@ -228,9 +258,9 @@ tbody tr:hover { background: #1f1f2e; }
             <input type="number" id="saleQty" min="1" value="1" required>
           </div>
           <div class="form-group">
-            <label>Precio Venta Unitario</label>
+            <label>Precio Venta</label>
             <input type="number" id="salePrice" step="1" min="0" required>
-            <span class="fixed-badge" id="priceNote">$2.000 por unidad (fijo)</span>
+            <span class="fixed-badge" id="priceNote">$2.000 fijo</span>
           </div>
           <div class="form-group">
             <label>Costo Unitario</label>
@@ -241,7 +271,7 @@ tbody tr:hover { background: #1f1f2e; }
             <input type="date" id="saleDate" required>
           </div>
           <div class="form-group">
-            <label>Nota (opcional)</label>
+            <label>Nota</label>
             <input type="text" id="saleNote" placeholder="ej: cliente x">
           </div>
         </div>
@@ -251,20 +281,20 @@ tbody tr:hover { background: #1f1f2e; }
       </form>
     </div>
     <div class="card">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px">
-        <h2 style="margin:0">📋 Historial de Ventas</h2>
-        <div style="display:flex;gap:8px">
-          <select id="saleFilter" style="padding:6px 10px;border:1px solid #2a2a3e;border-radius:6px;background:#0f0f0f;color:#e0e0e0;font-size:13px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:6px">
+        <h2 style="margin:0;font-size:14px">📋 Historial de Ventas</h2>
+        <div style="display:flex;gap:6px">
+          <select id="saleFilter" style="padding:6px 8px;border:1px solid #2a2a3e;border-radius:5px;background:#0f0f0f;color:#e0e0e0;font-size:12px;-webkit-appearance:none">
             <option value="all">Todos</option>
             <option value="cerveza">Cerveza</option>
             <option value="pisco">Pisco</option>
           </select>
-          <button class="btn btn-danger btn-sm" onclick="clearSales()">🗑 Limpiar</button>
+          <button class="btn btn-danger btn-sm" onclick="clearSales()">🗑</button>
         </div>
       </div>
-      <div style="overflow-x:auto">
+      <div class="scroll-x">
         <table>
-          <thead><tr><th>Fecha</th><th>Producto</th><th class="text-right">Cant.</th><th class="text-right">P. Venta</th><th class="text-right">P. Costo</th><th class="text-right">Ganancia</th><th>Nota</th><th class="text-center">Acción</th></tr></thead>
+          <thead><tr><th>Fecha</th><th>Prod.</th><th class="text-right">Cant</th><th class="text-right">P.Vta</th><th class="text-right">Cost</th><th class="text-right">Gan</th><th>Nota</th><th class="text-center"></th></tr></thead>
           <tbody id="salesTable"><tr><td colspan="8" class="text-center text-muted">Sin ventas registradas</td></tr></tbody>
         </table>
       </div>
@@ -279,7 +309,7 @@ tbody tr:hover { background: #1f1f2e; }
         <div class="form-grid">
           <div class="form-group">
             <label>Descripción</label>
-            <input type="text" id="expDesc" placeholder="ej: caja de cervezas" required>
+            <input type="text" id="expDesc" placeholder="ej: caja cervezas" required>
           </div>
           <div class="form-group">
             <label>Monto ($)</label>
@@ -288,10 +318,10 @@ tbody tr:hover { background: #1f1f2e; }
           <div class="form-group">
             <label>Categoría</label>
             <select id="expCategory">
-              <option value="insumos">📦 Insumos / Mercadería</option>
+              <option value="insumos">📦 Insumos</option>
               <option value="transporte">🚚 Transporte</option>
-              <option value="envases">🧊 Envases / Hielo</option>
-              <option value="permisos">📄 Permisos / Licencias</option>
+              <option value="envases">🧊 Envases</option>
+              <option value="permisos">📄 Permisos</option>
               <option value="otro">📌 Otro</option>
             </select>
           </div>
@@ -306,13 +336,13 @@ tbody tr:hover { background: #1f1f2e; }
       </form>
     </div>
     <div class="card">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px">
-        <h2 style="margin:0">📋 Historial de Gastos</h2>
-        <button class="btn btn-danger btn-sm" onclick="clearExpenses()">🗑 Limpiar</button>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:6px">
+        <h2 style="margin:0;font-size:14px">📋 Historial de Gastos</h2>
+        <button class="btn btn-danger btn-sm" onclick="clearExpenses()">🗑</button>
       </div>
-      <div style="overflow-x:auto">
+      <div class="scroll-x">
         <table>
-          <thead><tr><th>Fecha</th><th>Descripción</th><th>Categoría</th><th class="text-right">Monto</th><th class="text-center">Acción</th></tr></thead>
+          <thead><tr><th>Fecha</th><th>Descripción</th><th>Categoría</th><th class="text-right">Monto</th><th class="text-center"></th></tr></thead>
           <tbody id="expensesTable"><tr><td colspan="5" class="text-center text-muted">Sin gastos registrados</td></tr></tbody>
         </table>
       </div>
@@ -338,8 +368,8 @@ tbody tr:hover { background: #1f1f2e; }
             <input type="date" id="debtDate" required>
           </div>
           <div class="form-group">
-            <label>Motivo (opcional)</label>
-            <input type="text" id="debtReason" placeholder="ej: fiesta del sábado">
+            <label>Motivo</label>
+            <input type="text" id="debtReason" placeholder="ej: fiesta sábado">
           </div>
         </div>
         <div class="actions">
@@ -348,13 +378,13 @@ tbody tr:hover { background: #1f1f2e; }
       </form>
     </div>
     <div class="card">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px">
-        <h2 style="margin:0">📋 Gente que debe plata</h2>
-        <button class="btn btn-danger btn-sm" onclick="clearDebts()">🗑 Limpiar</button>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:6px">
+        <h2 style="margin:0;font-size:14px">📋 Gente que debe plata</h2>
+        <button class="btn btn-danger btn-sm" onclick="clearDebts()">🗑</button>
       </div>
-      <div style="overflow-x:auto">
+      <div class="scroll-x">
         <table>
-          <thead><tr><th>Nombre</th><th>Fecha</th><th>Motivo</th><th class="text-right">Monto</th><th>Estado</th><th class="text-center">Acción</th></tr></thead>
+          <thead><tr><th>Nombre</th><th>Fecha</th><th>Motivo</th><th class="text-right">Monto</th><th>Estado</th><th class="text-center"></th></tr></thead>
           <tbody id="debtsTable"><tr><td colspan="6" class="text-center text-muted">Sin deudas registradas</td></tr></tbody>
         </table>
       </div>
@@ -393,7 +423,6 @@ function fmt(n) {
   return '$' + Number(n).toLocaleString('es-CL');
 }
 
-// ===== NAV =====
 document.getElementById('mainNav').addEventListener('click', e => {
   const btn = e.target.closest('button');
   if (!btn) return;
@@ -403,18 +432,15 @@ document.getElementById('mainNav').addEventListener('click', e => {
   document.getElementById('section-' + btn.dataset.section).classList.add('active');
 });
 
-// ===== CALCULAR CAJAS DE CERVEZA =====
 function calcBeerBoxes() {
   const boxes = parseInt(document.getElementById('beerBoxes').value) || 0;
   const pricePerBox = parseInt(document.getElementById('beerBoxPrice').value) || 0;
   const totalUnits = boxes * 24;
   const totalPaid = boxes * pricePerBox;
   const unitCost = totalUnits > 0 ? Math.round(totalPaid / totalUnits) : 0;
-
-  document.getElementById('beerTotalUnits').value = totalUnits + ' unidades';
+  document.getElementById('beerTotalUnits').value = totalUnits + ' unid';
   document.getElementById('beerUnitCost').value = '$' + unitCost.toLocaleString('es-CL') + ' c/u';
   document.getElementById('beerTotalPaid').value = '$' + totalPaid.toLocaleString('es-CL');
-
   document.getElementById('applyUnitCost').disabled = (unitCost === 0);
   document.getElementById('applyUnitCost').dataset.cost = unitCost;
 }
@@ -428,18 +454,13 @@ function applyBeerCost() {
   document.getElementById('saleProduct').value = 'cerveza';
   updatePriceField();
   document.getElementById('saleCost').value = cost;
-  document.getElementById('saleCost').focus();
-  document.querySelector('[data-section="ventas"]').scrollIntoView({ behavior: 'smooth' });
 }
 
-// ===== CALCULAR PISCO PROMO =====
 function calcPisco() {
   const piscoCost = parseInt(document.getElementById('piscoCostPer').value) || 0;
   const mixerCost = parseInt(document.getElementById('piscoMixerPer').value) || 0;
   const total = piscoCost + mixerCost;
-
-  document.getElementById('piscoTotalCost').value = '$' + total.toLocaleString('es-CL') + ' por promo';
-
+  document.getElementById('piscoTotalCost').value = '$' + total.toLocaleString('es-CL') + ' x promo';
   document.getElementById('applyPiscoCost').disabled = (total === 0);
   document.getElementById('applyPiscoCost').dataset.cost = total;
 }
@@ -453,11 +474,8 @@ function applyPiscoCost() {
   document.getElementById('saleProduct').value = 'pisco';
   updatePriceField();
   document.getElementById('saleCost').value = cost;
-  document.getElementById('saleCost').focus();
-  document.querySelector('[data-section="ventas"]').scrollIntoView({ behavior: 'smooth' });
 }
 
-// ===== PRODUCT SWITCH =====
 const saleProduct = document.getElementById('saleProduct');
 const salePrice = document.getElementById('salePrice');
 const priceNote = document.getElementById('priceNote');
@@ -466,7 +484,7 @@ function updatePriceField() {
   if (saleProduct.value === 'cerveza') {
     salePrice.value = BEER_PRICE;
     salePrice.disabled = true;
-    priceNote.textContent = '$2.000 por unidad (fijo)';
+    priceNote.textContent = '$2.000 fijo';
   } else {
     salePrice.disabled = false;
     const saved = localStorage.getItem(PISCO_PRICE_KEY);
@@ -475,13 +493,12 @@ function updatePriceField() {
     } else {
       salePrice.value = '';
     }
-    priceNote.textContent = 'Ingresa el precio de la promo';
+    priceNote.textContent = 'Ingresa precio promo';
   }
 }
 
 saleProduct.addEventListener('change', updatePriceField);
 
-// ===== SALES =====
 document.getElementById('saleForm').addEventListener('submit', e => {
   e.preventDefault();
   const product = saleProduct.value;
@@ -551,7 +568,6 @@ function clearSales() {
   renderAll();
 }
 
-// ===== EXPENSES =====
 document.getElementById('expenseForm').addEventListener('submit', e => {
   e.preventDefault();
   const desc = document.getElementById('expDesc').value.trim();
@@ -598,7 +614,6 @@ function clearExpenses() {
   renderAll();
 }
 
-// ===== DEBTS =====
 document.getElementById('debtForm').addEventListener('submit', e => {
   e.preventDefault();
   const name = document.getElementById('debtName').value.trim();
@@ -625,9 +640,9 @@ function renderDebts() {
       <td>${d.date}</td>
       <td>${d.reason || '-'}</td>
       <td class="text-right" style="color:${d.paid ? '#4ade80' : '#ef4444'};font-weight:600">${fmt(d.amount)}</td>
-      <td><span class="badge ${d.paid ? 'badge-paid' : 'badge-pending'}">${d.paid ? '✅ Pago OK' : '⏳ Adeuda'}</span></td>
+      <td><span class="badge ${d.paid ? 'badge-paid' : 'badge-pending'}">${d.paid ? '✅ OK' : '⏳ Adeuda'}</span></td>
       <td class="text-center" style="white-space:nowrap">
-        <button class="btn btn-sm ${d.paid ? 'btn-outline' : 'btn-success'}" onclick="toggleDebt('${d.id}')">${d.paid ? '↩ Reabrir' : '✓ Pagó'}</button>
+        <button class="btn btn-sm ${d.paid ? 'btn-outline' : 'btn-success'}" onclick="toggleDebt('${d.id}')">${d.paid ? '↩' : '✓'}</button>
         <button class="btn btn-danger btn-sm" onclick="deleteDebt('${d.id}')">✕</button>
       </td>
     </tr>`
@@ -657,19 +672,16 @@ function clearDebts() {
   renderAll();
 }
 
-// ===== DASHBOARD =====
 function renderDashboard() {
   const beerSales = data.sales.filter(s => s.product === 'cerveza');
   const piscoSales = data.sales.filter(s => s.product === 'pisco');
   const beerQty = beerSales.reduce((a, s) => a + s.qty, 0);
   const piscoQty = piscoSales.reduce((a, s) => a + s.qty, 0);
-
   const totalSalesAmount = data.sales.reduce((a, s) => a + s.qty * s.price, 0);
   const totalCostAmount = data.sales.reduce((a, s) => a + s.qty * s.cost, 0);
   const profit = totalSalesAmount - totalCostAmount;
   const totalExpenses = data.expenses.reduce((a, e) => a + e.amount, 0);
   const totalDebt = data.debts.reduce((a, d) => a + (d.paid ? 0 : d.amount), 0);
-
   const totalInvested = totalCostAmount + totalExpenses;
   const totalEarned = totalSalesAmount;
 
@@ -677,14 +689,12 @@ function renderDashboard() {
   document.getElementById('sumPiscoQty').textContent = piscoQty;
   document.getElementById('sumProfit').textContent = fmt(profit);
   document.getElementById('sumDebt').textContent = fmt(totalDebt);
-
   document.getElementById('dashEarned').textContent = fmt(totalEarned);
   document.getElementById('dashInvested').textContent = fmt(totalInvested);
   const barPct = totalEarned > 0 ? Math.min((totalInvested / totalEarned) * 100, 100) : 0;
   document.getElementById('dashBar').style.width = barPct + '%';
   document.getElementById('dashInvestedPct').textContent = barPct.toFixed(1) + '%';
   document.getElementById('dashEarnedPct').textContent = (100 - barPct).toFixed(1) + '%';
-
   document.getElementById('dashBeerQty').textContent = beerQty;
   document.getElementById('dashBeerTotal').textContent = fmt(beerSales.reduce((a, s) => a + s.qty * s.price, 0));
   document.getElementById('dashPiscoQty').textContent = piscoQty;
@@ -726,7 +736,6 @@ function renderAll() {
   renderRecentMovements();
 }
 
-// ===== INIT =====
 document.getElementById('saleDate').value = today();
 document.getElementById('expDate').value = today();
 document.getElementById('debtDate').value = today();
