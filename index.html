@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Viejo Piola</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0f0f0f; color: #e0e0e0; min-height: 100vh; }
+.container { max-width: 1000px; margin: 0 auto; padding: 16px; }
+header { background: linear-gradient(135deg, #1a1a2e, #16213e); padding: 20px 24px; border-radius: 12px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+header h1 { font-size: 24px; color: #e94560; }
+header h1 span { color: #e0e0e0; }
+.header-total { font-size: 14px; color: #aaa; }
+.header-total strong { color: #4ade80; font-size: 18px; }
+
+nav { display: flex; gap: 4px; background: #1a1a2e; border-radius: 10px; padding: 4px; margin-bottom: 20px; overflow-x: auto; }
+nav button { flex: 1; padding: 10px 16px; border: none; background: transparent; color: #888; font-size: 14px; font-weight: 600; border-radius: 8px; cursor: pointer; transition: all .2s; white-space: nowrap; }
+nav button:hover { color: #ccc; }
+nav button.active { background: #e94560; color: #fff; }
+
+.section { display: none; }
+.section.active { display: block; }
+
+.card { background: #1a1a2e; border-radius: 10px; padding: 20px; margin-bottom: 16px; }
+.card h2 { font-size: 18px; margin-bottom: 16px; color: #e94560; }
+
+.form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 16px; }
+.form-group { display: flex; flex-direction: column; gap: 4px; }
+.form-group label { font-size: 12px; color: #888; font-weight: 600; text-transform: uppercase; letter-spacing: .5px; }
+.form-group input, .form-group select { padding: 10px 12px; border: 1px solid #2a2a3e; border-radius: 6px; background: #0f0f0f; color: #e0e0e0; font-size: 14px; outline: none; transition: border .2s; }
+.form-group input:focus, .form-group select:focus { border-color: #e94560; }
+.form-group input:disabled { opacity: .5; cursor: not-allowed; }
+
+.btn { padding: 10px 20px; border: none; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all .2s; }
+.btn-primary { background: #e94560; color: #fff; }
+.btn-primary:hover { background: #d63852; }
+.btn-danger { background: #dc2626; color: #fff; }
+.btn-danger:hover { background: #b91c1c; }
+.btn-success { background: #16a34a; color: #fff; }
+.btn-success:hover { background: #15803d; }
+.btn-sm { padding: 6px 12px; font-size: 12px; }
+.btn-outline { background: transparent; border: 1px solid #2a2a3e; color: #e0e0e0; }
+.btn-outline:hover { border-color: #e94560; color: #e94560; }
+.actions { display: flex; gap: 8px; align-items: end; flex-wrap: wrap; }
+
+table { width: 100%; border-collapse: collapse; font-size: 14px; }
+thead th { text-align: left; padding: 10px 12px; background: #0f0f0f; color: #888; font-size: 12px; text-transform: uppercase; letter-spacing: .5px; border-bottom: 1px solid #2a2a3e; }
+tbody td { padding: 10px 12px; border-bottom: 1px solid #1f1f2e; }
+tbody tr:hover { background: #1f1f2e; }
+.text-right { text-align: right; }
+.text-center { text-align: center; }
+.text-success { color: #4ade80; }
+.text-danger { color: #ef4444; }
+.text-muted { color: #666; }
+
+.badge { display: inline-block; padding: 2px 10px; border-radius: 999px; font-size: 11px; font-weight: 600; }
+.badge-beer { background: #f59e0b20; color: #f59e0b; }
+.badge-pisco { background: #8b5cf620; color: #8b5cf6; }
+.badge-pending { background: #facc1520; color: #facc15; }
+.badge-paid { background: #4ade8020; color: #4ade80; }
+
+.summary-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 20px; }
+.summary-card { background: #1a1a2e; border-radius: 10px; padding: 16px; text-align: center; }
+.summary-card .label { font-size: 12px; color: #888; text-transform: uppercase; letter-spacing: .5px; }
+.summary-card .value { font-size: 28px; font-weight: 700; margin-top: 4px; }
+.summary-card .value.gold { color: #f59e0b; }
+.summary-card .value.purple { color: #8b5cf6; }
+.summary-card .value.green { color: #4ade80; }
+.summary-card .value.red { color: #ef4444; }
+
+.fixed-badge { display: inline-block; font-size: 11px; color: #f59e0b; margin-top: 2px; }
+
+@media (max-width: 600px) {
+  header { flex-direction: column; text-align: center; }
+  .form-grid { grid-template-columns: 1fr 1fr; }
+  .summary-cards { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>🍺 <span>Viejo</span> Piola</h1>
+    <div class="header-total">Balance total: <strong id="totalBalance">$0</strong></div>
+  </header>
+
+  <nav id="mainNav">
+    <button class="active" data-section="dashboard">📊 Dashboard</button>
+    <button data-section="ventas">🍺 Ventas</button>
+    <button data-section="gastos">💰 Gastos</button>
+    <button data-section="deudas">📋 Deudas</button>
+  </nav>
+
+  <!-- DASHBOARD -->
+  <section id="section-dashboard" class="section active">
+    <div class="summary-cards">
+      <div class="summary-card"><div class="label">Cervezas Vendidas</div><div class="value gold" id="sumBeerQty">0</div></div>
+      <div class="summary-card"><div class="label">Promos Pisco Vendidas</div><div class="value purple" id="sumPiscoQty">0</div></div>
+      <div class="summary-card"><div class="label">Ganancia</div><div class="value green" id="sumProfit">$0</div></div>
+      <div class="summary-card"><div class="label">Por Cobrar</div><div class="value red" id="sumDebt">$0</div></div>
+    </div>
+    <div class="card">
+      <h2>💰 Ganado vs Invertido</h2>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:12px">
+        <div style="background:#0f0f0f;border-radius:8px;padding:16px;text-align:center">
+          <div style="font-size:12px;color:#888;text-transform:uppercase;letter-spacing:.5px">Total Ganado (Ventas)</div>
+          <div style="font-size:24px;font-weight:700;color:#4ade80;margin-top:4px" id="dashEarned">$0</div>
+        </div>
+        <div style="background:#0f0f0f;border-radius:8px;padding:16px;text-align:center">
+          <div style="font-size:12px;color:#888;text-transform:uppercase;letter-spacing:.5px">Total Invertido</div>
+          <div style="font-size:24px;font-weight:700;color:#ef4444;margin-top:4px" id="dashInvested">$0</div>
+        </div>
+      </div>
+      <div style="background:#0f0f0f;border-radius:8px;padding:16px">
+        <div style="display:flex;justify-content:space-between;font-size:12px;color:#888;margin-bottom:6px">
+          <span>Invertido</span>
+          <span id="dashInvestedPct">0%</span>
+        </div>
+        <div style="height:20px;background:#2a2a3e;border-radius:10px;overflow:hidden">
+          <div id="dashBar" style="height:100%;width:0%;background:linear-gradient(90deg,#4ade80,#22d3ee);border-radius:10px;transition:width .4s"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:12px;color:#888;margin-top:6px">
+          <span>Ganado</span>
+          <span id="dashEarnedPct">0%</span>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <h2>📈 Resumen</h2>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+        <div>
+          <table>
+            <thead><tr><th>Producto</th><th class="text-right">Cant.</th><th class="text-right">Total Venta</th></tr></thead>
+            <tbody>
+              <tr><td><span class="badge badge-beer">🍺 Cerveza</span></td><td class="text-right" id="dashBeerQty">0</td><td class="text-right" id="dashBeerTotal">$0</td></tr>
+              <tr><td><span class="badge badge-pisco">🥃 Pisco</span></td><td class="text-right" id="dashPiscoQty">0</td><td class="text-right" id="dashPiscoTotal">$0</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div>
+          <table>
+            <thead><tr><th>Métrica</th><th class="text-right">Monto</th></tr></thead>
+            <tbody>
+              <tr><td>Costo total (prod.)</td><td class="text-right" id="dashTotalCost">$0</td></tr>
+              <tr><td>Total Vendido</td><td class="text-right" id="dashTotalSales">$0</td></tr>
+              <tr><td>Gastos Operativos</td><td class="text-right" id="dashExpenses">$0</td></tr>
+              <tr><td>Deuda Pendiente</td><td class="text-right" id="dashTotalDebt">$0</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <h2>🕐 Últimos Movimientos</h2>
+      <table>
+        <thead><tr><th>Fecha</th><th>Tipo</th><th>Detalle</th><th class="text-right">Monto</th></tr></thead>
+        <tbody id="recentMovements"><tr><td colspan="4" class="text-center text-muted">Sin movimientos aún</td></tr></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- VENTAS -->
+  <section id="section-ventas" class="section">
+    <div class="card">
+      <h2>📦 Compra de Cerveza (cajas de 24)</h2>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Cantidad de cajas</label>
+          <input type="number" id="beerBoxes" min="1" value="1">
+        </div>
+        <div class="form-group">
+          <label>Precio por caja ($)</label>
+          <input type="number" id="beerBoxPrice" step="1" min="0" placeholder="ej: 28000">
+        </div>
+        <div class="form-group">
+          <label>Total unidades</label>
+          <input type="text" id="beerTotalUnits" disabled style="color:#f59e0b;font-weight:600">
+        </div>
+        <div class="form-group">
+          <label>Costo por unidad</label>
+          <input type="text" id="beerUnitCost" disabled style="color:#4ade80;font-weight:600">
+        </div>
+        <div class="form-group">
+          <label>Total pagado</label>
+          <input type="text" id="beerTotalPaid" disabled style="color:#ef4444;font-weight:600">
+        </div>
+      </div>
+      <div class="actions">
+        <button class="btn btn-success btn-sm" id="applyUnitCost" disabled onclick="applyBeerCost()">⬇ Usar este costo en venta</button>
+        <button class="btn btn-sm btn-outline" onclick="calcBeerBoxes()">🔄 Calcular</button>
+      </div>
+    </div>
+    <div class="card">
+      <h2>🥃 Costo de Pisco para Promo</h2>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Pisco que gastas x promo ($)</label>
+          <input type="number" id="piscoCostPer" step="1" min="0" placeholder="ej: 1800">
+        </div>
+        <div class="form-group">
+          <label>Bebida que gastas x promo ($)</label>
+          <input type="number" id="piscoMixerPer" step="1" min="0" placeholder="ej: 2000">
+        </div>
+        <div class="form-group">
+          <label>Costo total por promo</label>
+          <input type="text" id="piscoTotalCost" disabled style="color:#4ade80;font-weight:600">
+        </div>
+      </div>
+      <div class="actions">
+        <button class="btn btn-success btn-sm" id="applyPiscoCost" disabled onclick="applyPiscoCost()">⬇ Usar este costo en venta</button>
+        <button class="btn btn-sm btn-outline" onclick="calcPisco()">🔄 Calcular</button>
+      </div>
+    </div>
+    <div class="card">
+      <h2>🍺 Registrar Venta</h2>
+      <form id="saleForm" autocomplete="off">
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Producto</label>
+            <select id="saleProduct" required>
+              <option value="cerveza">🍺 Cerveza</option>
+              <option value="pisco">🥃 Promo Pisco</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Cantidad</label>
+            <input type="number" id="saleQty" min="1" value="1" required>
+          </div>
+          <div class="form-group">
+            <label>Precio Venta Unitario</label>
+            <input type="number" id="salePrice" step="1" min="0" required>
+            <span class="fixed-badge" id="priceNote">$2.000 por unidad (fijo)</span>
+          </div>
+          <div class="form-group">
+            <label>Costo Unitario</label>
+            <input type="number" id="saleCost" step="1" min="0" placeholder="ej: 1200" required>
+          </div>
+          <div class="form-group">
+            <label>Fecha</label>
+            <input type="date" id="saleDate" required>
+          </div>
+          <div class="form-group">
+            <label>Nota (opcional)</label>
+            <input type="text" id="saleNote" placeholder="ej: cliente x">
+          </div>
+        </div>
+        <div class="actions">
+          <button type="submit" class="btn btn-primary">➕ Registrar Venta</button>
+        </div>
+      </form>
+    </div>
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px">
+        <h2 style="margin:0">📋 Historial de Ventas</h2>
+        <div style="display:flex;gap:8px">
+          <select id="saleFilter" style="padding:6px 10px;border:1px solid #2a2a3e;border-radius:6px;background:#0f0f0f;color:#e0e0e0;font-size:13px">
+            <option value="all">Todos</option>
+            <option value="cerveza">Cerveza</option>
+            <option value="pisco">Pisco</option>
+          </select>
+          <button class="btn btn-danger btn-sm" onclick="clearSales()">🗑 Limpiar</button>
+        </div>
+      </div>
+      <div style="overflow-x:auto">
+        <table>
+          <thead><tr><th>Fecha</th><th>Producto</th><th class="text-right">Cant.</th><th class="text-right">P. Venta</th><th class="text-right">P. Costo</th><th class="text-right">Ganancia</th><th>Nota</th><th class="text-center">Acción</th></tr></thead>
+          <tbody id="salesTable"><tr><td colspan="8" class="text-center text-muted">Sin ventas registradas</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- GASTOS -->
+  <section id="section-gastos" class="section">
+    <div class="card">
+      <h2>💰 Registrar Gasto</h2>
+      <form id="expenseForm" autocomplete="off">
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Descripción</label>
+            <input type="text" id="expDesc" placeholder="ej: caja de cervezas" required>
+          </div>
+          <div class="form-group">
+            <label>Monto ($)</label>
+            <input type="number" id="expAmount" step="1" min="0" placeholder="ej: 120000" required>
+          </div>
+          <div class="form-group">
+            <label>Categoría</label>
+            <select id="expCategory">
+              <option value="insumos">📦 Insumos / Mercadería</option>
+              <option value="transporte">🚚 Transporte</option>
+              <option value="envases">🧊 Envases / Hielo</option>
+              <option value="permisos">📄 Permisos / Licencias</option>
+              <option value="otro">📌 Otro</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Fecha</label>
+            <input type="date" id="expDate" required>
+          </div>
+        </div>
+        <div class="actions">
+          <button type="submit" class="btn btn-primary">➕ Registrar Gasto</button>
+        </div>
+      </form>
+    </div>
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px">
+        <h2 style="margin:0">📋 Historial de Gastos</h2>
+        <button class="btn btn-danger btn-sm" onclick="clearExpenses()">🗑 Limpiar</button>
+      </div>
+      <div style="overflow-x:auto">
+        <table>
+          <thead><tr><th>Fecha</th><th>Descripción</th><th>Categoría</th><th class="text-right">Monto</th><th class="text-center">Acción</th></tr></thead>
+          <tbody id="expensesTable"><tr><td colspan="5" class="text-center text-muted">Sin gastos registrados</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- DEUDAS -->
+  <section id="section-deudas" class="section">
+    <div class="card">
+      <h2>📋 Registrar Deuda</h2>
+      <form id="debtForm" autocomplete="off">
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Nombre</label>
+            <input type="text" id="debtName" placeholder="ej: Juan Pérez" required>
+          </div>
+          <div class="form-group">
+            <label>Monto ($)</label>
+            <input type="number" id="debtAmount" step="1" min="0" placeholder="ej: 50000" required>
+          </div>
+          <div class="form-group">
+            <label>Fecha</label>
+            <input type="date" id="debtDate" required>
+          </div>
+          <div class="form-group">
+            <label>Motivo (opcional)</label>
+            <input type="text" id="debtReason" placeholder="ej: fiesta del sábado">
+          </div>
+        </div>
+        <div class="actions">
+          <button type="submit" class="btn btn-primary">➕ Registrar Deuda</button>
+        </div>
+      </form>
+    </div>
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px">
+        <h2 style="margin:0">📋 Gente que debe plata</h2>
+        <button class="btn btn-danger btn-sm" onclick="clearDebts()">🗑 Limpiar</button>
+      </div>
+      <div style="overflow-x:auto">
+        <table>
+          <thead><tr><th>Nombre</th><th>Fecha</th><th>Motivo</th><th class="text-right">Monto</th><th>Estado</th><th class="text-center">Acción</th></tr></thead>
+          <tbody id="debtsTable"><tr><td colspan="6" class="text-center text-muted">Sin deudas registradas</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+const STORAGE_KEY = 'viejoPiolaData';
+const PISCO_PRICE_KEY = 'viejoPiolaPiscoPrice';
+let data = loadData();
+
+function getDefaultData() {
+  return { sales: [], expenses: [], debts: [] };
+}
+function loadData() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      const d = JSON.parse(raw);
+      if (d && typeof d === 'object' && Array.isArray(d.sales) && Array.isArray(d.expenses) && Array.isArray(d.debts)) return d;
+    }
+  } catch (_) {}
+  return getDefaultData();
+}
+function saveData() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+}
+
+const BEER_PRICE = 2000;
+
+function genId() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 6); }
+function today() { return new Date().toISOString().slice(0, 10); }
+
+function fmt(n) {
+  return '$' + Number(n).toLocaleString('es-CL');
+}
+
+// ===== NAV =====
+document.getElementById('mainNav').addEventListener('click', e => {
+  const btn = e.target.closest('button');
+  if (!btn) return;
+  document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.getElementById('section-' + btn.dataset.section).classList.add('active');
+});
+
+// ===== CALCULAR CAJAS DE CERVEZA =====
+function calcBeerBoxes() {
+  const boxes = parseInt(document.getElementById('beerBoxes').value) || 0;
+  const pricePerBox = parseInt(document.getElementById('beerBoxPrice').value) || 0;
+  const totalUnits = boxes * 24;
+  const totalPaid = boxes * pricePerBox;
+  const unitCost = totalUnits > 0 ? Math.round(totalPaid / totalUnits) : 0;
+
+  document.getElementById('beerTotalUnits').value = totalUnits + ' unidades';
+  document.getElementById('beerUnitCost').value = '$' + unitCost.toLocaleString('es-CL') + ' c/u';
+  document.getElementById('beerTotalPaid').value = '$' + totalPaid.toLocaleString('es-CL');
+
+  document.getElementById('applyUnitCost').disabled = (unitCost === 0);
+  document.getElementById('applyUnitCost').dataset.cost = unitCost;
+}
+
+document.getElementById('beerBoxes').addEventListener('input', calcBeerBoxes);
+document.getElementById('beerBoxPrice').addEventListener('input', calcBeerBoxes);
+
+function applyBeerCost() {
+  const cost = parseInt(document.getElementById('applyUnitCost').dataset.cost);
+  if (!cost) return;
+  document.getElementById('saleProduct').value = 'cerveza';
+  updatePriceField();
+  document.getElementById('saleCost').value = cost;
+  document.getElementById('saleCost').focus();
+  document.querySelector('[data-section="ventas"]').scrollIntoView({ behavior: 'smooth' });
+}
+
+// ===== CALCULAR PISCO PROMO =====
+function calcPisco() {
+  const piscoCost = parseInt(document.getElementById('piscoCostPer').value) || 0;
+  const mixerCost = parseInt(document.getElementById('piscoMixerPer').value) || 0;
+  const total = piscoCost + mixerCost;
+
+  document.getElementById('piscoTotalCost').value = '$' + total.toLocaleString('es-CL') + ' por promo';
+
+  document.getElementById('applyPiscoCost').disabled = (total === 0);
+  document.getElementById('applyPiscoCost').dataset.cost = total;
+}
+
+document.getElementById('piscoCostPer').addEventListener('input', calcPisco);
+document.getElementById('piscoMixerPer').addEventListener('input', calcPisco);
+
+function applyPiscoCost() {
+  const cost = parseInt(document.getElementById('applyPiscoCost').dataset.cost);
+  if (!cost) return;
+  document.getElementById('saleProduct').value = 'pisco';
+  updatePriceField();
+  document.getElementById('saleCost').value = cost;
+  document.getElementById('saleCost').focus();
+  document.querySelector('[data-section="ventas"]').scrollIntoView({ behavior: 'smooth' });
+}
+
+// ===== PRODUCT SWITCH =====
+const saleProduct = document.getElementById('saleProduct');
+const salePrice = document.getElementById('salePrice');
+const priceNote = document.getElementById('priceNote');
+
+function updatePriceField() {
+  if (saleProduct.value === 'cerveza') {
+    salePrice.value = BEER_PRICE;
+    salePrice.disabled = true;
+    priceNote.textContent = '$2.000 por unidad (fijo)';
+  } else {
+    salePrice.disabled = false;
+    const saved = localStorage.getItem(PISCO_PRICE_KEY);
+    if (saved) {
+      salePrice.value = saved;
+    } else {
+      salePrice.value = '';
+    }
+    priceNote.textContent = 'Ingresa el precio de la promo';
+  }
+}
+
+saleProduct.addEventListener('change', updatePriceField);
+
+// ===== SALES =====
+document.getElementById('saleForm').addEventListener('submit', e => {
+  e.preventDefault();
+  const product = saleProduct.value;
+  const qty = parseInt(document.getElementById('saleQty').value);
+  let price;
+  if (product === 'cerveza') {
+    price = BEER_PRICE;
+  } else {
+    price = parseInt(salePrice.value);
+    if (price) localStorage.setItem(PISCO_PRICE_KEY, price.toString());
+  }
+  const cost = parseInt(document.getElementById('saleCost').value);
+  const date = document.getElementById('saleDate').value;
+  const note = document.getElementById('saleNote').value.trim();
+  if (!qty || !price || !cost || !date) return;
+  data.sales.push({ id: genId(), product, qty, price, cost, date, note });
+  saveData();
+  document.getElementById('saleForm').reset();
+  document.getElementById('saleQty').value = 1;
+  document.getElementById('saleDate').value = today();
+  updatePriceField();
+  renderAll();
+});
+
+document.getElementById('saleFilter').addEventListener('change', renderSales);
+
+function renderSales() {
+  const tbody = document.getElementById('salesTable');
+  const filter = document.getElementById('saleFilter').value;
+  let sales = data.sales;
+  if (filter !== 'all') sales = sales.filter(s => s.product === filter);
+  if (sales.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="8" class="text-center text-muted">Sin ventas registradas</td></tr>';
+    return;
+  }
+  tbody.innerHTML = sales.slice().reverse().map(s => {
+    const totalSale = s.qty * s.price;
+    const totalCost = s.qty * s.cost;
+    const profit = totalSale - totalCost;
+    const badge = s.product === 'cerveza' ? 'badge-beer' : 'badge-pisco';
+    const label = s.product === 'cerveza' ? '🍺 Cerveza' : '🥃 Pisco';
+    return `<tr>
+      <td>${s.date}</td>
+      <td><span class="badge ${badge}">${label}</span></td>
+      <td class="text-right">${s.qty}</td>
+      <td class="text-right">${fmt(s.price)}</td>
+      <td class="text-right">${fmt(s.cost)}</td>
+      <td class="text-right ${profit >= 0 ? 'text-success' : 'text-danger'}">${fmt(profit)}</td>
+      <td>${s.note || '-'}</td>
+      <td class="text-center"><button class="btn btn-danger btn-sm" onclick="deleteSale('${s.id}')">✕</button></td>
+    </tr>`;
+  }).join('');
+}
+
+function deleteSale(id) {
+  if (!confirm('¿Eliminar esta venta?')) return;
+  data.sales = data.sales.filter(s => s.id !== id);
+  saveData();
+  renderAll();
+}
+
+function clearSales() {
+  if (data.sales.length === 0) return;
+  if (!confirm('¿Eliminar TODAS las ventas?')) return;
+  data.sales = [];
+  saveData();
+  renderAll();
+}
+
+// ===== EXPENSES =====
+document.getElementById('expenseForm').addEventListener('submit', e => {
+  e.preventDefault();
+  const desc = document.getElementById('expDesc').value.trim();
+  const amount = parseInt(document.getElementById('expAmount').value);
+  const category = document.getElementById('expCategory').value;
+  const date = document.getElementById('expDate').value;
+  if (!desc || !amount || !date) return;
+  data.expenses.push({ id: genId(), desc, amount, category, date });
+  saveData();
+  document.getElementById('expenseForm').reset();
+  document.getElementById('expDate').value = today();
+  renderAll();
+});
+
+function renderExpenses() {
+  const tbody = document.getElementById('expensesTable');
+  if (data.expenses.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">Sin gastos registrados</td></tr>';
+    return;
+  }
+  tbody.innerHTML = data.expenses.slice().reverse().map(e =>
+    `<tr>
+      <td>${e.date}</td>
+      <td>${e.desc}</td>
+      <td>${e.category}</td>
+      <td class="text-right text-danger">${fmt(e.amount)}</td>
+      <td class="text-center"><button class="btn btn-danger btn-sm" onclick="deleteExpense('${e.id}')">✕</button></td>
+    </tr>`
+  ).join('');
+}
+
+function deleteExpense(id) {
+  if (!confirm('¿Eliminar este gasto?')) return;
+  data.expenses = data.expenses.filter(e => e.id !== id);
+  saveData();
+  renderAll();
+}
+
+function clearExpenses() {
+  if (data.expenses.length === 0) return;
+  if (!confirm('¿Eliminar TODOS los gastos?')) return;
+  data.expenses = [];
+  saveData();
+  renderAll();
+}
+
+// ===== DEBTS =====
+document.getElementById('debtForm').addEventListener('submit', e => {
+  e.preventDefault();
+  const name = document.getElementById('debtName').value.trim();
+  const amount = parseInt(document.getElementById('debtAmount').value);
+  const date = document.getElementById('debtDate').value;
+  const reason = document.getElementById('debtReason').value.trim();
+  if (!name || !amount || !date) return;
+  data.debts.push({ id: genId(), name, amount, date, reason, paid: false });
+  saveData();
+  document.getElementById('debtForm').reset();
+  document.getElementById('debtDate').value = today();
+  renderAll();
+});
+
+function renderDebts() {
+  const tbody = document.getElementById('debtsTable');
+  if (data.debts.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted">Sin deudas registradas</td></tr>';
+    return;
+  }
+  tbody.innerHTML = data.debts.slice().reverse().map(d =>
+    `<tr>
+      <td><strong>${d.name}</strong></td>
+      <td>${d.date}</td>
+      <td>${d.reason || '-'}</td>
+      <td class="text-right" style="color:${d.paid ? '#4ade80' : '#ef4444'};font-weight:600">${fmt(d.amount)}</td>
+      <td><span class="badge ${d.paid ? 'badge-paid' : 'badge-pending'}">${d.paid ? '✅ Pago OK' : '⏳ Adeuda'}</span></td>
+      <td class="text-center" style="white-space:nowrap">
+        <button class="btn btn-sm ${d.paid ? 'btn-outline' : 'btn-success'}" onclick="toggleDebt('${d.id}')">${d.paid ? '↩ Reabrir' : '✓ Pagó'}</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteDebt('${d.id}')">✕</button>
+      </td>
+    </tr>`
+  ).join('');
+}
+
+function toggleDebt(id) {
+  const d = data.debts.find(x => x.id === id);
+  if (!d) return;
+  d.paid = !d.paid;
+  saveData();
+  renderAll();
+}
+
+function deleteDebt(id) {
+  if (!confirm('¿Eliminar esta deuda?')) return;
+  data.debts = data.debts.filter(d => d.id !== id);
+  saveData();
+  renderAll();
+}
+
+function clearDebts() {
+  if (data.debts.length === 0) return;
+  if (!confirm('¿Eliminar TODAS las deudas?')) return;
+  data.debts = [];
+  saveData();
+  renderAll();
+}
+
+// ===== DASHBOARD =====
+function renderDashboard() {
+  const beerSales = data.sales.filter(s => s.product === 'cerveza');
+  const piscoSales = data.sales.filter(s => s.product === 'pisco');
+  const beerQty = beerSales.reduce((a, s) => a + s.qty, 0);
+  const piscoQty = piscoSales.reduce((a, s) => a + s.qty, 0);
+
+  const totalSalesAmount = data.sales.reduce((a, s) => a + s.qty * s.price, 0);
+  const totalCostAmount = data.sales.reduce((a, s) => a + s.qty * s.cost, 0);
+  const profit = totalSalesAmount - totalCostAmount;
+  const totalExpenses = data.expenses.reduce((a, e) => a + e.amount, 0);
+  const totalDebt = data.debts.reduce((a, d) => a + (d.paid ? 0 : d.amount), 0);
+
+  const totalInvested = totalCostAmount + totalExpenses;
+  const totalEarned = totalSalesAmount;
+
+  document.getElementById('sumBeerQty').textContent = beerQty;
+  document.getElementById('sumPiscoQty').textContent = piscoQty;
+  document.getElementById('sumProfit').textContent = fmt(profit);
+  document.getElementById('sumDebt').textContent = fmt(totalDebt);
+
+  document.getElementById('dashEarned').textContent = fmt(totalEarned);
+  document.getElementById('dashInvested').textContent = fmt(totalInvested);
+  const barPct = totalEarned > 0 ? Math.min((totalInvested / totalEarned) * 100, 100) : 0;
+  document.getElementById('dashBar').style.width = barPct + '%';
+  document.getElementById('dashInvestedPct').textContent = barPct.toFixed(1) + '%';
+  document.getElementById('dashEarnedPct').textContent = (100 - barPct).toFixed(1) + '%';
+
+  document.getElementById('dashBeerQty').textContent = beerQty;
+  document.getElementById('dashBeerTotal').textContent = fmt(beerSales.reduce((a, s) => a + s.qty * s.price, 0));
+  document.getElementById('dashPiscoQty').textContent = piscoQty;
+  document.getElementById('dashPiscoTotal').textContent = fmt(piscoSales.reduce((a, s) => a + s.qty * s.price, 0));
+  document.getElementById('dashTotalCost').textContent = fmt(totalCostAmount);
+  document.getElementById('dashTotalSales').textContent = fmt(totalSalesAmount);
+  document.getElementById('dashExpenses').textContent = fmt(totalExpenses);
+  document.getElementById('dashTotalDebt').textContent = fmt(totalDebt);
+  document.getElementById('totalBalance').textContent = fmt(profit + totalDebt);
+}
+
+function renderRecentMovements() {
+  const tbody = document.getElementById('recentMovements');
+  const items = [];
+  data.sales.forEach(s => items.push({ date: s.date, type: 'venta', detail: `${s.product === 'cerveza' ? '🍺' : '🥃'} ${s.qty} und`, amount: s.qty * s.price }));
+  data.expenses.forEach(e => items.push({ date: e.date, type: 'gasto', detail: `💰 ${e.desc}`, amount: -e.amount }));
+  data.debts.filter(d => !d.paid).forEach(d => items.push({ date: d.date, type: 'deuda', detail: `📋 ${d.name}`, amount: d.amount }));
+  items.sort((a, b) => b.date.localeCompare(a.date) || 0);
+  const recent = items.slice(0, 15);
+  if (recent.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="4" class="text-center text-muted">Sin movimientos aún</td></tr>';
+    return;
+  }
+  tbody.innerHTML = recent.map(m =>
+    `<tr>
+      <td>${m.date}</td>
+      <td>${m.type === 'venta' ? '🟢 Venta' : m.type === 'gasto' ? '🔴 Gasto' : '🟡 Deuda'}</td>
+      <td>${m.detail}</td>
+      <td class="text-right ${m.amount >= 0 ? 'text-success' : 'text-danger'}">${m.amount >= 0 ? '+' : ''}${fmt(Math.abs(m.amount))}</td>
+    </tr>`
+  ).join('');
+}
+
+function renderAll() {
+  renderSales();
+  renderExpenses();
+  renderDebts();
+  renderDashboard();
+  renderRecentMovements();
+}
+
+// ===== INIT =====
+document.getElementById('saleDate').value = today();
+document.getElementById('expDate').value = today();
+document.getElementById('debtDate').value = today();
+updatePriceField();
+renderAll();
+</script>
+</body>
+</html>
